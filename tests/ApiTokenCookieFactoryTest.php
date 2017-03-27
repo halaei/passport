@@ -2,14 +2,10 @@
 
 use Illuminate\Encryption\Encrypter;
 use Laravel\Passport\ApiTokenCookieFactory;
+use PassportTests\Base\TestCase;
 
-class ApiTokenCookieFactoryTest extends PHPUnit_Framework_TestCase
+class ApiTokenCookieFactoryTest extends TestCase
 {
-    public function tearDown()
-    {
-        Mockery::close();
-    }
-
     public function test_cookie_can_be_successfully_created()
     {
         $config = Mockery::mock('Illuminate\Contracts\Config\Repository');

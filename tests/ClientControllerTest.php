@@ -1,14 +1,10 @@
 <?php
 
 use Illuminate\Http\Request;
+use PassportTests\Base\TestCase;
 
-class ClientControllerTest extends PHPUnit_Framework_TestCase
+class ClientControllerTest extends TestCase
 {
-    public function tearDown()
-    {
-        Mockery::close();
-    }
-
     public function test_all_the_clients_for_the_current_user_can_be_retrieved()
     {
         $clients = Mockery::mock('Laravel\Passport\ClientRepository');

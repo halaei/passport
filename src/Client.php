@@ -4,6 +4,18 @@ namespace Laravel\Passport;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property int $id
+ * @property int $user_id
+ * @property string $name
+ * @property string $secret
+ * @property array $redirect
+ * @property bool $public_client
+ * @property bool $personal_access_client
+ * @property bool $password_client
+ * @property bool $trusted_client
+ * @property bool $revoked
+ */
 class Client extends Model
 {
     /**
@@ -35,8 +47,11 @@ class Client extends Model
      * @var array
      */
     protected $casts = [
+        'redirect' => 'array',
+        'public_client' => 'bool',
         'personal_access_client' => 'bool',
         'password_client' => 'bool',
+        'trusted_client' => 'bool',
         'revoked' => 'bool',
     ];
 
@@ -62,6 +77,7 @@ class Client extends Model
 
     /**
      * Determine if the client is a "first party" client.
+     * @deprecated or add check for trusted_client
      *
      * @return bool
      */

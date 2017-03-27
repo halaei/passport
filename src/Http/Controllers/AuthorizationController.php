@@ -64,23 +64,24 @@ class AuthorizationController
 
             $scopes = $this->parseScopes($authRequest);
 
-            $token = $tokens->findValidToken(
-                $user = $request->user(),
-                $client = $clients->find($authRequest->getClient()->getIdentifier())
-            );
+            $client = $clients->find($authRequest->getClient()->getIdentifier());
+            $user = $request->user();
 
-            if ($token && $token->scopes === collect($scopes)->pluck('id')->all()) {
-                return $this->approveRequest($authRequest, $user);
+            if (! $client->trusted_client) {
+                $token = $tokens->findValidToken($user, $client);
+                if (! $token || $token->scopes !== collect($scopes)->pluck('id')->all()) {
+                    $request->session()->put('authRequest', $authRequest);
+
+                    return $this->response->view('passport::authorize', [
+                        'client' => $client,
+                        'user' => $user,
+                        'scopes' => $scopes,
+                        'request' => $request,
+                    ]);
+                }
             }
 
-            $request->session()->put('authRequest', $authRequest);
-
-            return $this->response->view('passport::authorize', [
-                'client' => $client,
-                'user' => $user,
-                'scopes' => $scopes,
-                'request' => $request,
-            ]);
+            return $this->approveRequest($authRequest, $user);
         });
     }
 

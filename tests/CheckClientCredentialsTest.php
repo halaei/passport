@@ -2,14 +2,10 @@
 
 use Laravel\Passport\Http\Middleware\CheckClientCredentials;
 use Illuminate\Http\Request;
+use PassportTests\Base\TestCase;
 
-class CheckClientCredentialsTest extends PHPUnit_Framework_TestCase
+class CheckClientCredentialsTest extends TestCase
 {
-    public function tearDown()
-    {
-        Mockery::close();
-    }
-
     public function test_request_is_passed_along_if_token_is_valid()
     {
         $resourceServer = Mockery::mock('League\OAuth2\Server\ResourceServer');

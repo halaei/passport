@@ -1,14 +1,10 @@
 <?php
 
 use Laravel\Passport\Http\Middleware\CheckScopes;
+use PassportTests\Base\TestCase;
 
-class CheckScopesTest extends PHPUnit_Framework_TestCase
+class CheckScopesTest extends TestCase
 {
-    public function tearDown()
-    {
-        Mockery::close();
-    }
-
     public function test_request_is_passed_along_if_scopes_are_present_on_token()
     {
         $middleware = new CheckScopes;

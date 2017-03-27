@@ -1,14 +1,10 @@
 <?php
 
 use Illuminate\Container\Container;
+use PassportTests\Base\TestCase;
 
-class HasApiTokensTest extends PHPUnit_Framework_TestCase
+class HasApiTokensTest extends TestCase
 {
-    public function tearDown()
-    {
-        Mockery::close();
-    }
-
     public function test_token_can_indicates_if_token_has_given_scope()
     {
         $user = new HasApiTokensTestStub;

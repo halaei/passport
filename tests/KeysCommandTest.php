@@ -1,5 +1,7 @@
 <?php
 
+use PassportTests\Base\TestCase;
+
 function storage_path($file = null)
 {
     return __DIR__ . DIRECTORY_SEPARATOR . $file;
@@ -10,11 +12,11 @@ function custom_path($file = null)
     return __DIR__.DIRECTORY_SEPARATOR.'files'.DIRECTORY_SEPARATOR.$file;
 }
 
-class KeysCommandTest extends PHPUnit_Framework_TestCase
+class KeysCommandTest extends TestCase
 {
     public function tearDown()
     {
-        Mockery::close();
+        parent::tearDown();
 
         @unlink(storage_path('oauth-private.key'));
         @unlink(storage_path('oauth-public.key'));

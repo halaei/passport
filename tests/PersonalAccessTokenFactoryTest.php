@@ -1,12 +1,9 @@
 <?php
 
-class PersonalAccessTokenFactoryTest extends PHPUnit_Framework_TestCase
-{
-    public function tearDown()
-    {
-        Mockery::close();
-    }
+use PassportTests\Base\TestCase;
 
+class PersonalAccessTokenFactoryTest extends TestCase
+{
     public function test_access_token_can_be_created()
     {
         $server = Mockery::mock('League\OAuth2\Server\AuthorizationServer');

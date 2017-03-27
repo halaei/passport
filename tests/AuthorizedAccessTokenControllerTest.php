@@ -1,9 +1,11 @@
 <?php
 
+use Illuminate\Container\Container;
 use Illuminate\Http\Request;
 use Laravel\Passport\Client;
+use PassportTests\Base\TestCase;
 
-class AuthorizedAccessTokenControllerTest extends PHPUnit_Framework_TestCase
+class AuthorizedAccessTokenControllerTest extends TestCase
 {
     public function tearDown()
     {

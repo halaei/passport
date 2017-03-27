@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Laravel\Passport\PassportSchema;
 
 class CreateOauthAccessTokensTable extends Migration
 {
@@ -15,12 +16,18 @@ class CreateOauthAccessTokensTable extends Migration
     {
         Schema::create('oauth_access_tokens', function (Blueprint $table) {
             $table->string('id', 100)->primary();
-            $table->integer('user_id')->index()->nullable();
-            $table->integer('client_id');
+
+            PassportSchema::userId($table, true);
+
+            PassportSchema::integer($table, 'client_id', true)->index();
+            $table->foreign(['client_id'])->references('id')->on('oauth_clients')->onDelete('CASCADE');
+
             $table->string('name')->nullable();
             $table->text('scopes')->nullable();
             $table->boolean('revoked');
+
             $table->timestamps();
+
             $table->dateTime('expires_at')->nullable();
         });
     }

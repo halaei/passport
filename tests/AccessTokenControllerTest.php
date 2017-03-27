@@ -2,14 +2,10 @@
 
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Debug\ExceptionHandler;
+use PassportTests\Base\TestCase;
 
-class AccessTokenControllerTest extends PHPUnit_Framework_TestCase
+class AccessTokenControllerTest extends TestCase
 {
-    public function tearDown()
-    {
-        Mockery::close();
-    }
-
     public function test_a_token_can_be_issued()
     {
         $server = Mockery::mock('League\OAuth2\Server\AuthorizationServer');

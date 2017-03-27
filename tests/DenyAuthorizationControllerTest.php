@@ -1,14 +1,10 @@
 <?php
 
 use Illuminate\Contracts\Routing\ResponseFactory;
+use PassportTests\Base\TestCase;
 
-class DenyAuthorizationControllerTest extends PHPUnit_Framework_TestCase
+class DenyAuthorizationControllerTest extends TestCase
 {
-    public function tearDown()
-    {
-        Mockery::close();
-    }
-
     public function test_authorization_can_be_denied()
     {
         $response = Mockery::mock(ResponseFactory::class);

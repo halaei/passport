@@ -2,14 +2,10 @@
 
 use Laravel\Passport\Passport;
 use Illuminate\Http\Request;
+use PassportTests\Base\TestCase;
 
-class PersonalAccessTokenControllerTest extends PHPUnit_Framework_TestCase
+class PersonalAccessTokenControllerTest extends TestCase
 {
-    public function tearDown()
-    {
-        Mockery::close();
-    }
-
     public function test_tokens_can_be_retrieved_for_users()
     {
         $request = Request::create('/', 'GET');

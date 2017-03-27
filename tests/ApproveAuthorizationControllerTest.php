@@ -1,14 +1,10 @@
 <?php
 
 use League\OAuth2\Server\AuthorizationServer;
+use PassportTests\Base\TestCase;
 
-class ApproveAuthorizationControllerTest extends PHPUnit_Framework_TestCase
+class ApproveAuthorizationControllerTest extends TestCase
 {
-    public function tearDown()
-    {
-        Mockery::close();
-    }
-
     public function test_complete_authorization_request()
     {
         $server = Mockery::mock(AuthorizationServer::class);

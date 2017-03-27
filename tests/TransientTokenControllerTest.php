@@ -1,14 +1,10 @@
 <?php
 
+use PassportTests\Base\TestCase;
 use Symfony\Component\HttpFoundation\Cookie;
 
-class TransientTokenControllerTest extends PHPUnit_Framework_TestCase
+class TransientTokenControllerTest extends TestCase
 {
-    public function tearDown()
-    {
-        Mockery::close();
-    }
-
     public function test_token_can_be_refreshed()
     {
         $cookieFactory = Mockery::mock('Laravel\Passport\ApiTokenCookieFactory');
