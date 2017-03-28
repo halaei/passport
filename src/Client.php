@@ -77,12 +77,11 @@ class Client extends Model
 
     /**
      * Determine if the client is a "first party" client.
-     * @deprecated or add check for trusted_client
      *
      * @return bool
      */
     public function firstParty()
     {
-        return $this->personal_access_client || $this->password_client;
+        return $this->personal_access_client || $this->password_client || $this->trusted_client;
     }
 }
