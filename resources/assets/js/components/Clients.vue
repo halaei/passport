@@ -121,8 +121,7 @@
                                 <label class="col-md-3 control-label">Redirect URL</label>
 
                                 <div class="col-md-7">
-                                    <input type="text" class="form-control" name="redirect"
-                                                    @keyup.enter="store" v-model="createForm.redirect">
+                                    <textarea class="form-control" name="redirect" v-model="createForm.redirect"></textarea>
 
                                     <span class="help-block">
                                         Your application's authorization callback URL.
@@ -189,8 +188,7 @@
                                 <label class="col-md-3 control-label">Redirect URL</label>
 
                                 <div class="col-md-7">
-                                    <input type="text" class="form-control" name="redirect"
-                                                    @keyup.enter="update" v-model="editForm.redirect">
+                                    <textarea class="form-control" name="redirect" v-model="editForm.redirect"></textarea>
 
                                     <span class="help-block">
                                         Your application's authorization callback URL.
@@ -226,13 +224,15 @@
                 createForm: {
                     errors: [],
                     name: '',
-                    redirect: ''
+                    redirect: '',
+                    redirects: []
                 },
 
                 editForm: {
                     errors: [],
                     name: '',
-                    redirect: ''
+                    redirect: '',
+                    redirects: []
                 }
             };
         },
@@ -300,7 +300,7 @@
             edit(client) {
                 this.editForm.id = client.id;
                 this.editForm.name = client.name;
-                this.editForm.redirect = client.redirect;
+                this.editForm.redirect = client.redirect.join("\n");
 
                 $('#modal-edit-client').modal('show');
             },
@@ -321,12 +321,15 @@
             persistClient(method, uri, form, modal) {
                 form.errors = [];
 
+                form.redirects = form.redirect.replace(/\r\n/g,"\n").split("\n");
+
                 axios[method](uri, form)
                     .then(response => {
                         this.getClients();
 
                         form.name = '';
                         form.redirect = '';
+                        form.redirects = [];
                         form.errors = [];
 
                         $(modal).modal('hide');
