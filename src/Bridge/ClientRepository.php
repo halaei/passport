@@ -60,6 +60,7 @@ class ClientRepository implements ClientRepositoryInterface
      *
      * @param  \Laravel\Passport\Client  $record
      * @param  string  $grantType
+     * @todo: fix
      * @return bool
      */
     protected function handlesGrant($record, $grantType)

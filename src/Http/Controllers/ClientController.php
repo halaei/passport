@@ -85,7 +85,8 @@ class ClientController
 
         $this->validation->make($request->all(), [
             'name' => 'required|max:255',
-            'redirect' => 'required|url',
+            'redirect' => 'required|array|min:1',
+            'redirect.*' => 'url',
         ])->validate();
 
         return $this->clients->update(
