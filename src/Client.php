@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $name
  * @property string $secret
  * @property array $redirect
+ * @property array $scopes
  * @property bool $public_client
  * @property bool $personal_access_client
  * @property bool $password_client
@@ -48,6 +49,7 @@ class Client extends Model
      */
     protected $casts = [
         'redirect' => 'array',
+        'scopes' => 'array',
         'public_client' => 'bool',
         'personal_access_client' => 'bool',
         'password_client' => 'bool',

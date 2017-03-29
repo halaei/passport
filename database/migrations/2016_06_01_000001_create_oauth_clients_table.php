@@ -22,6 +22,7 @@ class CreateOauthClientsTable extends Migration
             $table->string('name');
             $table->string('secret', 100);
             $table->text('redirect');
+            $table->text('scopes')->nullable()->default(null);
 
             $table->boolean('public_client')->default(0);
             $table->boolean('personal_access_client')->default(0);
