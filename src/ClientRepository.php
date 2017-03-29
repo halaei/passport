@@ -72,7 +72,7 @@ class ClientRepository
      *
      * @param  int  $userId
      * @param  string  $name
-     * @param  string[]|null  $redirect
+     * @param  string[]  $redirect
      * @param  bool  $personalAccess
      * @param  bool  $password
      * @return Client
@@ -99,7 +99,7 @@ class ClientRepository
      *
      * @param  int  $userId
      * @param  string  $name
-     * @param  string[]|null  $redirect
+     * @param  string[]  $redirect
      * @return Client
      */
     public function createPersonalAccessClient($userId, $name, $redirect)
@@ -112,7 +112,7 @@ class ClientRepository
      *
      * @param  int  $userId
      * @param  string  $name
-     * @param  string[]|null  $redirect
+     * @param  string[]  $redirect
      * @return Client
      */
     public function createPasswordGrantClient($userId, $name, $redirect)
@@ -125,7 +125,7 @@ class ClientRepository
      *
      * @param  Client  $client
      * @param  string  $name
-     * @param  string[]|null  $redirect todo
+     * @param  string[]  $redirect
      * @return Client
      */
     public function update(Client $client, $name, $redirect)

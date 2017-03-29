@@ -62,11 +62,12 @@ class ClientController
     {
         $this->validation->make($request->all(), [
             'name' => 'required|max:255',
-            'redirect' => 'required|url',
+            'redirects' => 'required|array',
+            'redirects.*' => 'url',
         ])->validate();
 
         return $this->clients->create(
-            $request->user()->getKey(), $request->name, $request->redirect
+            $request->user()->getKey(), $request->name, $request->redirects
         )->makeVisible('secret');
     }
 
@@ -85,13 +86,13 @@ class ClientController
 
         $this->validation->make($request->all(), [
             'name' => 'required|max:255',
-            'redirect' => 'required|array|min:1',
-            'redirect.*' => 'url',
+            'redirects' => 'required|array',
+            'redirects.*' => 'url',
         ])->validate();
 
         return $this->clients->update(
             $request->user()->clients->find($clientId),
-            $request->name, $request->redirect
+            $request->name, $request->redirects
         );
     }
 

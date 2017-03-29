@@ -40,19 +40,14 @@ class ClientRepository implements ClientRepositoryInterface
             return;
         }
 
-        // Once we have an existing client record we will create this actual client instance
-        // and verify the secret if necessary. If the secret is valid we will be ready to
-        // return this client instance back out to the consuming methods and finish up.
-        $client = new Client(
-            $clientIdentifier, $record->name, $record->redirect, $record->getScopes()
-        );
-
-        if ($mustValidateSecret &&
-            ! hash_equals($record->secret, (string) $clientSecret)) {
+        // Validate secret if necessary.
+        if ($mustValidateSecret && ! $record->public_client && ! hash_equals($record->secret, (string) $clientSecret)) {
             return;
         }
 
-        return $client;
+        // Once we have an existing client record with verified secret, we will create this actual client instance.
+        // Then we will be ready to return this client instance back out to the consuming methods and finish up.
+        return new Client($clientIdentifier, $record->name, $record->redirect);
     }
 
     /**
@@ -60,20 +55,30 @@ class ClientRepository implements ClientRepositoryInterface
      *
      * @param  \Laravel\Passport\Client  $record
      * @param  string  $grantType
-     * @todo: fix
      * @return bool
      */
     protected function handlesGrant($record, $grantType)
     {
-        switch ($grantType) {
-            case 'authorization_code':
-                return ! $record->firstParty();
-            case 'personal_access':
-                return $record->personal_access_client;
-            case 'password':
-                return $record->password_client;
-            default:
-                return true;
+        // Public clients can only handle password grant type.
+        if ($record->public_client && $grantType !== 'password') {
+            return false;
         }
+
+        // Personal access clients can only handle personal access type.
+        if ($record->personal_access_client) {
+            return $grantType === 'personal_access';
+        }
+
+        // Password grant type can only be handled by password clients.
+        if ($grantType === 'password') {
+            return $record->password_client;
+        }
+
+        // Personal access grant type can only be handled by personal access clients.
+        if ($grantType === 'personal_access') {
+            return $record->personal_access_client;
+        }
+
+        return true;
     }
 }

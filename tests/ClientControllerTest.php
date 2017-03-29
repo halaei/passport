@@ -25,20 +25,21 @@ class ClientControllerTest extends TestCase
     {
         $clients = Mockery::mock('Laravel\Passport\ClientRepository');
 
-        $request = Request::create('/', 'GET', ['name' => 'client name', 'redirect' => 'http://localhost']);
+        $request = Request::create('/', 'GET', ['name' => 'client name', 'redirects' => ['http://localhost']]);
         $request->setUserResolver(function () {
             return new ClientControllerFakeUser;
         });
 
-        $clients->shouldReceive('create')->once()->with(1, 'client name', 'http://localhost')->andReturn($client = new Laravel\Passport\Client);
+        $clients->shouldReceive('create')->once()->with(1, 'client name', ['http://localhost'])->andReturn($client = new Laravel\Passport\Client);
 
         $validator = Mockery::mock('Illuminate\Contracts\Validation\Factory');
         $validator->shouldReceive('make')->once()->with([
             'name' => 'client name',
-            'redirect' => 'http://localhost',
+            'redirects' => ['http://localhost'],
         ], [
             'name' => 'required|max:255',
-            'redirect' => 'required|url',
+            'redirects' => 'required|array',
+            'redirects.*' => 'url'
         ])->andReturn($validator);
         $validator->shouldReceive('validate')->once();
 
@@ -53,7 +54,7 @@ class ClientControllerTest extends TestCase
     {
         $clients = Mockery::mock('Laravel\Passport\ClientRepository');
 
-        $request = Request::create('/', 'GET', ['name' => 'client name', 'redirect' => 'http://localhost']);
+        $request = Request::create('/', 'GET', ['name' => 'client name', 'redirects' => ['http://localhost']]);
 
         $request->setUserResolver(function () {
             $user = Mockery::mock();
@@ -67,16 +68,17 @@ class ClientControllerTest extends TestCase
         });
 
         $clients->shouldReceive('update')->once()->with(
-            Mockery::type('Laravel\Passport\Client'), 'client name', 'http://localhost'
+            Mockery::type('Laravel\Passport\Client'), 'client name', ['http://localhost']
         )->andReturn('response');
 
         $validator = Mockery::mock('Illuminate\Contracts\Validation\Factory');
         $validator->shouldReceive('make')->once()->with([
             'name' => 'client name',
-            'redirect' => 'http://localhost',
+            'redirects' => ['http://localhost'],
         ], [
             'name' => 'required|max:255',
-            'redirect' => 'required|url',
+            'redirects' => 'required|array',
+            'redirects.*' => 'url',
         ])->andReturn($validator);
         $validator->shouldReceive('validate')->once();
 
