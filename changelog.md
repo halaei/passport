@@ -9,5 +9,8 @@ Public clients and trusted clients are defined.
 A public client does not logically has a secret, hence should never use it.
 A trusted client is always authorized for all the scopes, hence no user approval is required when granting a token/authorization-code.
 
+### Personal Access
+Personal access grants and routes can be disabled by setting `Passport::$personalAccessGrantEnabled` to `false`.
+
 ### Tests
 Tests are improved and some issues are fixed.

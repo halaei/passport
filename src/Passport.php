@@ -11,6 +11,13 @@ use Illuminate\Support\Facades\Route;
 class Passport
 {
     /**
+     * Indicates if the personal access grant type is enabled.
+     *
+     * @var boolean
+     */
+    public static $personalAccessGrantEnabled = true;
+
+    /**
      * Indicates if the implicit grant type is enabled.
      *
      * @var boolean|null

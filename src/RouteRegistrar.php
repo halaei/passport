@@ -129,6 +129,10 @@ class RouteRegistrar
      */
     public function forPersonalAccessTokens()
     {
+        if (! Passport::$personalAccessGrantEnabled) {
+            return;
+        }
+
         $this->router->group(['middleware' => ['web', 'auth']], function ($router) {
             $router->get('/scopes', [
                 'uses' => 'ScopeController@all',
