@@ -24,3 +24,8 @@ To limit a client, change `scopes` of the corresponding record in the `oauth_cli
 
 ### Tests
 Tests are improved and some issues are fixed.
+
+#TODO
+1. Delete personal access client feature.
+2. Change passport:client console command.
+3. Let clients can be identified by something other that auto-generated id.
