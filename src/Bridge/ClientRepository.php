@@ -47,7 +47,7 @@ class ClientRepository implements ClientRepositoryInterface
 
         // Once we have an existing client record with verified secret, we will create this actual client instance.
         // Then we will be ready to return this client instance back out to the consuming methods and finish up.
-        return new Client($clientIdentifier, $record->name, $record->redirect);
+        return new Client($clientIdentifier, $record->name, $record->redirect, $record->getScopes());
     }
 
     /**

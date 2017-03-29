@@ -86,4 +86,14 @@ class Client extends Model
     {
         return $this->personal_access_client || $this->password_client || $this->trusted_client;
     }
+
+    /**
+     * Get the list of client scopes.
+     *
+     * @return array
+     */
+    public function getScopes()
+    {
+        return is_null($this->scopes) ? ['*'] : $this->scopes;
+    }
 }

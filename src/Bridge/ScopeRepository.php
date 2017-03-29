@@ -4,6 +4,7 @@ namespace Laravel\Passport\Bridge;
 
 use Laravel\Passport\Passport;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
+use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 
 class ScopeRepository implements ScopeRepositoryInterface
@@ -19,20 +20,16 @@ class ScopeRepository implements ScopeRepositoryInterface
     }
 
     /**
+     * @param  Client  $clientEntity
      * {@inheritdoc}
      */
     public function finalizeScopes(
         array $scopes, $grantType,
         ClientEntityInterface $clientEntity, $userIdentifier = null)
     {
-        if (! in_array($grantType, ['password', 'personal_access'])) {
-            $scopes = collect($scopes)->reject(function ($scope) {
-                return trim($scope->getIdentifier()) === '*';
-            })->values()->all();
-        }
-
-        return collect($scopes)->filter(function ($scope) {
+        return $clientEntity->filterScopes(collect($scopes)->filter(function ($scope) {
+            /** @var ScopeEntityInterface $scope */
             return Passport::hasScope($scope->getIdentifier());
-        })->values()->all();
+        })->values()->all());
     }
 }

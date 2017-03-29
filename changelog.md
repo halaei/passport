@@ -13,12 +13,14 @@ Migrations are configurable by changing the `\Laravel\Passport\PassportSchema::$
 
 #### Grant types
 Some changes are done for determining if a client can handle the given grant type.
+Personal access grants and routes can be disabled by setting `Passport::$personalAccessGrantEnabled` to `false`.
 
 #### Redirect URLs
 A client can have multiple redirect urls.
 
-### Personal Access
-Personal access grants and routes can be disabled by setting `Passport::$personalAccessGrantEnabled` to `false`.
+#### Scopes
+A client can be limited to specific set of scopes. By default all scopes are accessible.
+To limit a client, change `scopes` of the corresponding record in the `oauth_clients` table into a json array.
 
 ### Tests
 Tests are improved and some issues are fixed.
