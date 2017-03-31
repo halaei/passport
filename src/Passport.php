@@ -289,11 +289,7 @@ class Passport
      */
     public static function actingAs($user, $scopes = [], $guard = 'api')
     {
-        $token = Mockery::mock(Token::class)->shouldIgnoreMissing(false);
-
-        foreach ($scopes as $scope) {
-            $token->shouldReceive('can')->with($scope)->andReturn(true);
-        }
+        $token = new Token(['scopes' => $scopes]);
 
         $user->withAccessToken($token);
 
