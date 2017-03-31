@@ -50,7 +50,7 @@ class CheckClientCredentialsTest extends TestCase
     }
 
     /**
-     * @expectedException Illuminate\Auth\AuthenticationException
+     * @expectedException Laravel\Passport\Exceptions\MissingScopeException
      */
     public function test_exception_is_thrown_if_token_does_not_have_required_scopes()
     {
