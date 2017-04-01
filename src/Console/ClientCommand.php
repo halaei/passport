@@ -38,7 +38,7 @@ class ClientCommand extends Command
     public function handle(ClientRepository $clients)
     {
         $client = $clients->create(
-            $this->option('user'),
+            $this->option('user') ?: null,
             $this->argument('name'),
             $this->redirects(),
             $this->scopes(),
