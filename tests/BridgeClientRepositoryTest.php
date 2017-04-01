@@ -74,11 +74,11 @@ class BridgeClientRepositoryTest extends TestCase
             'password_client' => true,
         ]));
 
-        $this->assertNull($this->repository->getClientEntity(1, 'authorization_code', 'secret', true));
         $this->assertNull($this->repository->getClientEntity(1, 'client_credentials', 'secret', true));
         $this->assertNull($this->repository->getClientEntity(1, 'personal_access', 'secret', true));
 
-        $this->assertInstanceOf(Client::class, $this->repository->getClientEntity(1, 'password', null, false));
+        $this->assertInstanceOf(Client::class, $this->repository->getClientEntity(1, 'authorization_code', 'secret', true));
+        $this->assertInstanceOf(Client::class, $this->repository->getClientEntity(1, 'password', null, true));
         $this->assertInstanceOf(Client::class, $this->repository->getClientEntity(1, 'refresh_token', 'secret', true));
     }
 

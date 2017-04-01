@@ -8,6 +8,17 @@ use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 class ClientRepository implements ClientRepositoryInterface
 {
     /**
+     * List of grant types accessible to public clients.
+     *
+     * @var array
+     */
+    public static $publicGrantTypes = [
+        'authorization_code',
+        'password',
+        'refresh_token'
+    ];
+
+    /**
      * The client model repository.
      *
      * @var \Laravel\Passport\ClientRepository
@@ -57,8 +68,8 @@ class ClientRepository implements ClientRepositoryInterface
      */
     protected function handlesGrant($record, $grantType)
     {
-        // Public clients can only handle password grant type, and hence, refresh_token.
-        if ($record->public_client && ! in_array($grantType, ['password', 'refresh_token'])) {
+        // Public clients can only handle public grant types.
+        if ($record->public_client && ! static::isPublicGrantType($grantType)) {
             return false;
         }
 
@@ -78,5 +89,16 @@ class ClientRepository implements ClientRepositoryInterface
         }
 
         return true;
+    }
+
+    /**
+     * Determine if a grant type is accessible to public clients.
+     *
+     * @param  string  $type
+     * @return bool
+     */
+    protected static function isPublicGrantType($type)
+    {
+        return in_array($type, static::$publicGrantTypes);
     }
 }

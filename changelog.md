@@ -6,10 +6,13 @@ Migrations are configurable by changing the `\Laravel\Passport\PassportSchema::$
 
 ### Clients
 
-#### Public and trusted clients
-1. A public client does not logically has a secret, hence should never use it.
-    - When requesting a password grant type, a secret is only required for non-public (confidential) clients.
-2. A trusted client is always authorized for all the scopes, hence no user approval is required when requesting a token/authorization-code.
+#### Public clients
+A public client does not logically has a secret, hence should never use it.
+Public clients does not have access to grant types that require client authentication.
+When requesting a password/authorization_code/refresh_token grant type, a secret is only required for non-public (confidential) clients.
+
+#### Trusted clients
+A trusted client is always authorized for all the scopes, hence no user approval is required when requesting a token/authorization-code.
 
 #### Grant types
 Some changes are done for determining if a client can handle the given grant type.
