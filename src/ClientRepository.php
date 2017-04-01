@@ -63,7 +63,7 @@ class ClientRepository
         if (Passport::$personalAccessClient) {
             return Client::find(Passport::$personalAccessClient);
         } else {
-            return PersonalAccessClient::orderBy('id', 'desc')->first()->client;
+            return PersonalAccessClient::orderBy('id', 'desc')->firstOrFail()->client;
         }
     }
 
@@ -96,6 +96,12 @@ class ClientRepository
         ]);
 
         $client->save();
+
+        if ($client->personal_access_client) {
+            (new PersonalAccessClient([
+                'client_id' => $client->id,
+            ]))->save();
+        }
 
         return $client;
     }
