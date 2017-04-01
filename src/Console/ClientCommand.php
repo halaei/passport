@@ -20,7 +20,7 @@ class ClientCommand extends Command
             {--public : Mark the client as public}
             {--personal : Mark the client as a personal access client}
             {--password : Mark the client as a password client}
-            {--trusted_client : Mark the client as trusted}';
+            {--trusted : Mark the client as trusted}';
 
     /**
      * The console command description.
