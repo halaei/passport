@@ -60,7 +60,7 @@ class CheckClientCredentials
      * @param  array  $scopes
      * @return void
      *
-     * @throws MissingScopeException
+     * @throws \Laravel\Passport\Exceptions\MissingScopeException
      */
     protected function validateScopes($psr, $scopes)
     {
@@ -70,7 +70,7 @@ class CheckClientCredentials
 
         foreach ($scopes as $scope) {
             if (! in_array($scope, $tokenScopes)) {
-                throw new MissingScopeException();
+                throw new MissingScopeException($scope);
             }
         }
     }
