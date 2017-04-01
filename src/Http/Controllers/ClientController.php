@@ -64,10 +64,15 @@ class ClientController
             'name' => 'required|max:255',
             'redirects' => 'required|array',
             'redirects.*' => 'url',
+            'scopes' => 'array',
+            'scopes.*' => 'string',
         ])->validate();
 
         return $this->clients->create(
-            $request->user()->getKey(), $request->name, $request->redirects
+            $request->user()->getKey(),
+            $request->name,
+            $request->redirects,
+            $request->scopes
         )->makeVisible('secret');
     }
 

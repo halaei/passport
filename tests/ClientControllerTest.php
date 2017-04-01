@@ -30,7 +30,7 @@ class ClientControllerTest extends TestCase
             return new ClientControllerFakeUser;
         });
 
-        $clients->shouldReceive('create')->once()->with(1, 'client name', ['http://localhost'])->andReturn($client = new Laravel\Passport\Client);
+        $clients->shouldReceive('create')->once()->with(1, 'client name', ['http://localhost'], null)->andReturn($client = new Laravel\Passport\Client);
 
         $validator = Mockery::mock('Illuminate\Contracts\Validation\Factory');
         $validator->shouldReceive('make')->once()->with([
@@ -39,7 +39,9 @@ class ClientControllerTest extends TestCase
         ], [
             'name' => 'required|max:255',
             'redirects' => 'required|array',
-            'redirects.*' => 'url'
+            'redirects.*' => 'url',
+            'scopes' => 'array',
+            'scopes.*' => 'string',
         ])->andReturn($validator);
         $validator->shouldReceive('validate')->once();
 

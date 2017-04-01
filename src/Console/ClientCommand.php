@@ -2,11 +2,8 @@
 
 namespace Laravel\Passport\Console;
 
-use DateTime;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 use Laravel\Passport\ClientRepository;
-use Laravel\Passport\PersonalAccessClient;
 
 class ClientCommand extends Command
 {
@@ -16,9 +13,14 @@ class ClientCommand extends Command
      * @var string
      */
     protected $signature = 'passport:client
-            {--personal : Create a personal access token client}
-            {--password : Create a password grant client}
-            {--name= : The name of the client}';
+            {name : The name of the client}
+            {--user : The user ID that the client be assigned to}
+            {--redirect : Space separated list of redirect URLs}
+            {--scopes : Space seperated list of scopes}
+            {--public : Mark the client as public}
+            {--personal : Mark the client as a personal access client}
+            {--password : Mark the client as a password client}
+            {--trusted_client : Mark the client as trusted}';
 
     /**
      * The console command description.
@@ -35,92 +37,43 @@ class ClientCommand extends Command
      */
     public function handle(ClientRepository $clients)
     {
-        if ($this->option('personal')) {
-            return $this->createPersonalClient($clients);
-        }
-
-        if ($this->option('password')) {
-            return $this->createPasswordClient($clients);
-        }
-
-        $this->createAuthCodeClient($clients);
-    }
-
-    /**
-     * Create a new personal access client.
-     *
-     * @param  \Laravel\Passport\ClientRepository  $clients
-     * @return void
-     */
-    protected function createPersonalClient(ClientRepository $clients)
-    {
-        $name = $this->option('name') ?: $this->ask(
-            'What should we name the personal access client?',
-            config('app.name').' Personal Access Client'
-        );
-
-        $client = $clients->createPersonalAccessClient(
-            null, $name, ['http://localhost']
-        );
-
-        $accessClient = new PersonalAccessClient();
-        $accessClient->client_id = $client->id;
-        $accessClient->save();
-
-        $this->info('Personal access client created successfully.');
-        $this->line('<comment>Client ID:</comment> '.$client->id);
-        $this->line('<comment>Client Secret:</comment> '.$client->secret);
-    }
-
-    /**
-     * Create a new password grant client.
-     *
-     * @param  \Laravel\Passport\ClientRepository  $clients
-     * @return void
-     */
-    protected function createPasswordClient(ClientRepository $clients)
-    {
-        $name = $this->option('name') ?: $this->ask(
-            'What should we name the password grant client?',
-            config('app.name').' Password Grant Client'
-        );
-
-        $client = $clients->createPasswordGrantClient(
-            null, $name, ['http://localhost']
-        );
-
-        $this->info('Password grant client created successfully.');
-        $this->line('<comment>Client ID:</comment> '.$client->id);
-        $this->line('<comment>Client Secret:</comment> '.$client->secret);
-    }
-
-    /**
-     * Create a authorization code client.
-     *
-     * @param  \Laravel\Passport\ClientRepository  $clients
-     * @return void
-     */
-    protected function createAuthCodeClient(ClientRepository $clients)
-    {
-        $userId = $this->ask(
-            'Which user ID should the client be assigned to?'
-        );
-
-        $name = $this->option('name') ?: $this->ask(
-            'What should we name the client?'
-        );
-
-        $redirect = $this->ask(
-            'Where should we redirect the request after authorization?',
-            url('/auth/callback')
-        );
-
         $client = $clients->create(
-            $userId, $name, $redirect
+            $this->option('user'),
+            $this->argument('name'),
+            $this->redirects(),
+            $this->scopes(),
+            (bool) $this->option('public'),
+            (bool) $this->option('personal'),
+            (bool) $this->option('password'),
+            (bool) $this->option('trusted')
         );
 
-        $this->info('New client created successfully.');
+        $this->info("New client ($client->name) created successfully.");
         $this->line('<comment>Client ID:</comment> '.$client->id);
         $this->line('<comment>Client secret:</comment> '.$client->secret);
+    }
+
+    /**
+     * Get the list of redirect urls
+     *
+     * @return array
+     */
+    protected function redirects()
+    {
+        return preg_split('/\s+/', $this->option('redirect'), -1, PREG_SPLIT_NO_EMPTY);
+    }
+
+    /**
+     * Get the list of scopes
+     *
+     * @return array|null
+     */
+    protected function scopes()
+    {
+        if ($this->hasOption('scopes')) {
+            return preg_split('/\s+/', $this->option('scopes'), -1, PREG_SPLIT_NO_EMPTY);
+        }
+
+        return null;
     }
 }

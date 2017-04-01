@@ -70,54 +70,34 @@ class ClientRepository
     /**
      * Store a new client.
      *
-     * @param  int  $userId
+     * @param  int|null  $userId
      * @param  string  $name
      * @param  string[]  $redirect
-     * @param  bool  $personalAccess
+     * @param  null|array  $scopes
+     * @param  bool  $public
+     * @param  bool  $personal
      * @param  bool  $password
+     * @param  bool  $trusted
      * @return Client
      */
-    public function create($userId, $name, $redirect, $personalAccess = false, $password = false)
+    public function create($userId, $name, array $redirect, $scopes, $public = false, $personal = false, $password = false, $trusted = false)
     {
         $client = (new Client)->forceFill([
             'user_id' => $userId,
             'name' => $name,
             'secret' => str_random(40),
             'redirect' => $redirect,
-            'personal_access_client' => $personalAccess,
+            'scopes' => $scopes,
+            'public_client' => $public,
+            'personal_access_client' => $personal,
             'password_client' => $password,
+            'trusted_client' => $trusted,
             'revoked' => false,
         ]);
 
         $client->save();
 
         return $client;
-    }
-
-    /**
-     * Store a new personal access token client.
-     *
-     * @param  int  $userId
-     * @param  string  $name
-     * @param  string[]  $redirect
-     * @return Client
-     */
-    public function createPersonalAccessClient($userId, $name, $redirect)
-    {
-        return $this->create($userId, $name, $redirect, true);
-    }
-
-    /**
-     * Store a new password grant client.
-     *
-     * @param  int  $userId
-     * @param  string  $name
-     * @param  string[]  $redirect
-     * @return Client
-     */
-    public function createPasswordGrantClient($userId, $name, $redirect)
-    {
-        return $this->create($userId, $name, $redirect, false, true);
     }
 
     /**
