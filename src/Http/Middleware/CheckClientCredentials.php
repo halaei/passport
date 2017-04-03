@@ -50,6 +50,8 @@ class CheckClientCredentials
 
         $this->validateScopes($psr, $scopes);
 
+        $this->copyOAuthClaims($request, $psr);
+
         return $next($request);
     }
 
@@ -73,5 +75,19 @@ class CheckClientCredentials
                 throw new MissingScopeException($scope);
             }
         }
+    }
+
+    /**
+     * Copy Token Claims from PSR request to Laravel request.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @param  \Psr\Http\Message\ServerRequestInterface $psr
+     */
+    protected function copyOAuthClaims($request, $psr)
+    {
+        $request['oauth_access_token_id'] = $psr->getAttribute('oauth_access_token_id');
+        $request['oauth_client_id'] = $psr->getAttribute('oauth_client_id');
+        $request['oauth_user_id'] = $psr->getAttribute('oauth_user_id');
+        $request['oauth_scopes'] = $psr->getAttribute('oauth_scopes');
     }
 }
