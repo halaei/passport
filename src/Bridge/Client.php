@@ -41,6 +41,7 @@ class Client implements ClientEntityInterface
      */
     public function filterScopes(array $scopes)
     {
+        // If this is a super-client, return all the required scopes.
         if (in_array('*', $this->scopes)) {
             return $scopes;
         }
@@ -48,7 +49,15 @@ class Client implements ClientEntityInterface
         $accepted = [];
 
         foreach ($scopes as $scope) {
-            if (! $scope->getIdentifier() == '*' && in_array($scope->getIdentifier(), $this->scopes)) {
+            // If the super-scope is required, return all the client scopes.
+            if ($scope->getIdentifier() == '*') {
+                return array_map(function ($scope) {
+                    return new Scope($scope);
+                }, $this->scopes);
+            }
+
+            // Filter scopes that are not supported by the client.
+            if (in_array($scope->getIdentifier(), $this->scopes)) {
                 $accepted[] = $scope;
             }
         }
