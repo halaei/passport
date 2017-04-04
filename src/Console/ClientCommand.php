@@ -16,7 +16,7 @@ class ClientCommand extends Command
             {name : The name of the client}
             {--user= : The user ID that the client be assigned to}
             {--redirect= : Space separated list of redirect URLs}
-            {--scopes= : Space seperated list of scopes}
+            {--scopes= : Space separated list of scopes}
             {--public : Mark the client as public}
             {--personal : Mark the client as a personal access client}
             {--password : Mark the client as a password client}
