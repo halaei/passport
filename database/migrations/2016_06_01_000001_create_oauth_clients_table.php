@@ -15,8 +15,8 @@ class CreateOauthClientsTable extends Migration
     public function up()
     {
         Schema::create('oauth_clients', function (Blueprint $table) {
-            PassportSchema::increments($table, 'id');
-
+            $table->string('id', 64);
+            $table->primary(['id']);
             PassportSchema::userId($table, true);
 
             $table->string('name');

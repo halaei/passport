@@ -5,7 +5,7 @@ namespace Laravel\Passport;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @property int $id
+ * @property string $id
  * @property int $user_id
  * @property string $name
  * @property string $secret
@@ -25,6 +25,8 @@ class Client extends Model
      * @var string
      */
     protected $table = 'oauth_clients';
+
+    public $incrementing = false;
 
     /**
      * The guarded attributes on the model.

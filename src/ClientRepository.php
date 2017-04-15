@@ -2,6 +2,8 @@
 
 namespace Laravel\Passport;
 
+use Illuminate\Database\QueryException;
+
 class ClientRepository
 {
     /**
@@ -74,15 +76,17 @@ class ClientRepository
      * @param  string  $name
      * @param  string[]  $redirect
      * @param  null|array  $scopes
+     * @param  string|null  $id
      * @param  bool  $public
      * @param  bool  $personal
      * @param  bool  $password
      * @param  bool  $trusted
      * @return Client
      */
-    public function create($userId, $name, array $redirect, $scopes, $public = false, $personal = false, $password = false, $trusted = false)
+    public function create($userId, $name, array $redirect, $scopes, $id = null, $public = false, $personal = false, $password = false, $trusted = false)
     {
         $client = (new Client)->forceFill([
+            'id' => $id ? $id : str_random(40),
             'user_id' => $userId,
             'name' => $name,
             'secret' => str_random(40),
@@ -95,7 +99,18 @@ class ClientRepository
             'revoked' => false,
         ]);
 
-        $client->save();
+        for ($retry = 0;; $retry++) {
+            try {
+                $client->save();
+                break;
+            } catch (QueryException $e) {
+                if ($retry < 3 && ! $id) {
+                    $client->id = str_random(40);
+                } else {
+                    throw $e;
+                }
+            }
+        }
 
         if ($client->personal_access_client) {
             (new PersonalAccessClient([

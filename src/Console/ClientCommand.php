@@ -14,6 +14,7 @@ class ClientCommand extends Command
      */
     protected $signature = 'passport:client
             {name : The name of the client}
+            {--id= : The client id (default will be a random string)}
             {--user= : The user ID that the client be assigned to}
             {--redirect= : Space separated list of redirect URLs}
             {--scopes= : Space separated list of scopes}
@@ -42,6 +43,7 @@ class ClientCommand extends Command
             $this->argument('name'),
             $this->redirects(),
             $this->scopes(),
+            $this->option('id') ?: null,
             (bool) $this->option('public'),
             (bool) $this->option('personal'),
             (bool) $this->option('password'),

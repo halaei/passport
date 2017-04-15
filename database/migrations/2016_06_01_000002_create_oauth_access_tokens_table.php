@@ -19,7 +19,7 @@ class CreateOauthAccessTokensTable extends Migration
 
             PassportSchema::userId($table, true);
 
-            PassportSchema::integer($table, 'client_id', true)->index();
+            $table->string('client_id', 64)->index();
             $table->foreign(['client_id'])->references('id')->on('oauth_clients')->onDelete('CASCADE');
 
             $table->string('name')->nullable();
