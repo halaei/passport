@@ -86,7 +86,7 @@ class PassportSchema
         $unsigned = static::config('user.id.unsigned');
 
         if (static::config('user.id.big')) {
-            $userId = $table->integer('user_id', false, $unsigned);
+            $userId = $table->bigInteger('user_id', false, $unsigned);
         } else {
             $userId = $table->integer('user_id', false, $unsigned);
         }
