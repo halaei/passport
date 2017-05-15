@@ -2,7 +2,6 @@
 
 namespace Laravel\Passport;
 
-use Mockery;
 use DateInterval;
 use Carbon\Carbon;
 use DateTimeInterface;
