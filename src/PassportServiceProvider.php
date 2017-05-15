@@ -76,11 +76,27 @@ class PassportServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->registerRepositories();
+
         $this->registerAuthorizationServer();
 
         $this->registerResourceServer();
 
         $this->registerGuard();
+    }
+
+    /**
+     * Register the repositories.
+     *
+     * @return void
+     */
+    protected function registerRepositories()
+    {
+        $this->app->singleton(ClientRepository::class, function () {
+            return Passport::$useCache ?
+                $this->app->make(\Laravel\Passport\Cache\ClientRepository::class) :
+                new ClientRepository();
+        });
     }
 
     /**

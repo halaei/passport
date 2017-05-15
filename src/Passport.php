@@ -90,6 +90,13 @@ class Passport
     public static $runsMigrations = true;
 
     /**
+     * Indicates if Cache repositories should be used.
+     *
+     * @var bool
+     */
+    public static $useCache = false;
+
+    /**
      * Enable the implicit grant type.
      *
      * @return static
