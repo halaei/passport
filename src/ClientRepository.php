@@ -161,9 +161,8 @@ class ClientRepository
      */
     public function revoked($id)
     {
-        $client = $this->find($id);
-
-        return ! $client || $client->revoked;
+        return ! Client::where('id', $id)
+            ->where('revoked', false)->exists();
     }
 
     /**
