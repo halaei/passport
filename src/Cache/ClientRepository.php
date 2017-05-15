@@ -14,6 +14,11 @@ class ClientRepository extends \Laravel\Passport\ClientRepository
      */
     private $cache;
 
+    /**
+     * ClientRepository constructor.
+     *
+     * @param Repository $cache
+     */
     public function __construct(Repository $cache)
     {
         $this->cache = $cache;
@@ -26,7 +31,10 @@ class ClientRepository extends \Laravel\Passport\ClientRepository
             return $cached;
         }
         $fresh = parent::find($id);
-        $this->cache->put($this->cacheKey($id), $fresh, 60);
+        if ($fresh) {
+            $this->cache->put($this->cacheKey($id), $fresh, 60);
+        }
+
         return parent::find($id);
     }
 
@@ -65,6 +73,6 @@ class ClientRepository extends \Laravel\Passport\ClientRepository
      */
     private function cacheKey($id)
     {
-        return '_passport:client:' . $id;
+        return '_passport:client:'.$id;
     }
 }

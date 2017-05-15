@@ -95,7 +95,13 @@ class PassportServiceProvider extends ServiceProvider
         $this->app->singleton(ClientRepository::class, function () {
             return Passport::$useCache ?
                 $this->app->make(\Laravel\Passport\Cache\ClientRepository::class) :
-                new ClientRepository();
+                new ClientRepository;
+        });
+
+        $this->app->singleton(TokenRepository::class, function () {
+            return Passport::$useCache ?
+                $this->app->make(\Laravel\Passport\Cache\TokenRepository::class) :
+                new TokenRepository;
         });
     }
 
@@ -263,7 +269,7 @@ class PassportServiceProvider extends ServiceProvider
             return (new TokenGuard(
                 $this->app->make(ResourceServer::class),
                 Auth::createUserProvider($config['provider']),
-                new TokenRepository,
+                $this->app->make(TokenRepository::class),
                 $this->app->make(ClientRepository::class),
                 $this->app->make('encrypter')
             ))->user($request);
