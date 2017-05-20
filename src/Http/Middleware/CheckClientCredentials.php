@@ -3,6 +3,7 @@
 namespace Laravel\Passport\Http\Middleware;
 
 use Closure;
+use Laravel\Passport\ClientRepository;
 use Laravel\Passport\Exceptions\MissingScopeException;
 use League\OAuth2\Server\ResourceServer;
 use Illuminate\Auth\AuthenticationException;
@@ -19,14 +20,23 @@ class CheckClientCredentials
     private $server;
 
     /**
+     * The Client Repository instance.
+     *
+     * @var ClientRepository
+     */
+    private $clients;
+
+    /**
      * Create a new middleware instance.
      *
      * @param  ResourceServer  $server
+     * @param  ClientRepository  $clients
      * @return void
      */
-    public function __construct(ResourceServer $server)
+    public function __construct(ResourceServer $server, ClientRepository $clients)
     {
         $this->server = $server;
+        $this->clients = $clients;
     }
 
     /**
@@ -42,9 +52,16 @@ class CheckClientCredentials
     {
         $psr = (new DiactorosFactory)->createRequest($request);
 
-        try{
+        try {
             $psr = $this->server->validateAuthenticatedRequest($psr);
         } catch (OAuthServerException $e) {
+            throw new AuthenticationException;
+        }
+
+        $clientId = $psr->getAttribute('oauth_client_id');
+
+        // Verify if the client that issued this token is still valid
+        if ($this->clients->revoked($clientId)) {
             throw new AuthenticationException;
         }
 
