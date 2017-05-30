@@ -63,7 +63,9 @@ class TokenRepository
      */
     public function revokeAccessToken($id)
     {
-        return $this->find($id)->update(['revoked' => true]);
+        $token = $this->find($id);
+
+        return $token ? $token->update(['revoked' => true]) : false;
     }
 
     /**
