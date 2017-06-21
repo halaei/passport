@@ -2,6 +2,7 @@
 
 namespace Laravel\Passport\Bridge;
 
+use Carbon\Carbon;
 use Illuminate\Database\Connection;
 use Illuminate\Contracts\Events\Dispatcher;
 use Laravel\Passport\Events\RefreshTokenCreated;
@@ -73,7 +74,8 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
      */
     public function isRefreshTokenRevoked($tokenId)
     {
-        return $this->database->table('oauth_refresh_tokens')
-                    ->where('id', $tokenId)->where('revoked', true)->exists();
+        return ! $this->database->table('oauth_refresh_tokens')
+                    ->where('expires_at', '>', Carbon::now())
+                    ->where('id', $tokenId)->where('revoked', false)->exists();
     }
 }
