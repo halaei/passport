@@ -27,7 +27,7 @@ class TokenRepository extends \Laravel\Passport\TokenRepository
     public function find($id)
     {
         $cached = $this->cache->get($this->cacheKey($id));
-        if ($cached) {
+        if ($cached instanceof Token) {
             return $cached;
         }
         $fresh = parent::find($id);
@@ -35,7 +35,7 @@ class TokenRepository extends \Laravel\Passport\TokenRepository
             $this->cache->put($this->cacheKey($id), $fresh, 60);
         }
 
-        return parent::find($id);
+        return $fresh;
     }
 
     public function save(Token $token)

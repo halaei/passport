@@ -27,7 +27,7 @@ class ClientRepository extends \Laravel\Passport\ClientRepository
     public function find($id)
     {
         $cached = $this->cache->get($this->cacheKey($id));
-        if ($cached) {
+        if ($cached instanceof Client) {
             return $cached;
         }
         $fresh = parent::find($id);
@@ -35,7 +35,7 @@ class ClientRepository extends \Laravel\Passport\ClientRepository
             $this->cache->put($this->cacheKey($id), $fresh, 60);
         }
 
-        return parent::find($id);
+        return $fresh;
     }
 
     public function update(Client $client, $name, $redirect)
