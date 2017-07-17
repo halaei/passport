@@ -54,6 +54,15 @@ class Passport
     ];
 
     /**
+     * Public scopes (user scopes).
+     *
+     * @var array
+     */
+    public static $publicScopes = [
+        //
+    ];
+
+    /**
      * The date when access tokens expire.
      *
      * @var \DateTimeInterface|null
@@ -228,6 +237,16 @@ class Passport
     public static function tokensCan(array $scopes)
     {
         static::$scopes = $scopes;
+    }
+
+    /**
+     * Declare the public scopes for the users.
+     *
+     * @param array $scopes
+     */
+    public static function setPublicScopes(array $scopes)
+    {
+        static::$publicScopes = array_intersect($scopes, array_keys(static::$scopes));
     }
 
     /**
