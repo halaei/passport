@@ -224,7 +224,7 @@ class PassportServiceProvider extends ServiceProvider
             $this->app->make(Bridge\AccessTokenRepository::class),
             $this->app->make(Bridge\ScopeRepository::class),
             'file://'.Passport::keyPath('oauth-private.key'),
-            'file://'.Passport::keyPath('oauth-public.key')
+            app('encrypter')->getKey()
         );
 
         $server->setEncryptionKey(config('app.key'));
