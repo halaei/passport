@@ -3,6 +3,7 @@
 namespace Laravel\Passport\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Laravel\Passport\Client;
 use Laravel\Passport\Passport;
 use Laravel\Passport\Bridge\User;
 use Laravel\Passport\TokenRepository;
@@ -62,9 +63,10 @@ class AuthorizationController
         return $this->withErrorHandling(function () use ($psrRequest, $request, $clients, $tokens) {
             $authRequest = $this->server->validateAuthorizationRequest($psrRequest);
 
-            $scopes = $this->parseScopes($authRequest);
-
             $client = $clients->find($authRequest->getClient()->getIdentifier());
+
+            $scopes = $this->parseScopes($authRequest, $client);
+
             $user = $request->user();
 
             if (! $client->trusted_client) {
@@ -89,14 +91,24 @@ class AuthorizationController
      * Transform the authorization requests's scopes into Scope instances.
      *
      * @param  AuthorizationRequest  $authRequest
+     * @param Client $client
+     *
      * @return array
      */
-    protected function parseScopes($authRequest)
+    protected function parseScopes($authRequest, Client $client)
     {
+        $scopes = collect($authRequest->getScopes())->map(function ($scope) {
+            return $scope->getIdentifier();
+        })->all();
+
+        if (in_array('*', $scopes)) {
+            $scopes = array_values(array_intersect($client->getScopes(), Passport::$publicScopes));
+        } else {
+            $scopes = array_values(array_intersect($scopes, $client->getScopes(), Passport::$publicScopes));
+        }
+
         return Passport::scopesFor(
-            collect($authRequest->getScopes())->map(function ($scope) {
-                return $scope->getIdentifier();
-            })->all()
+            $scopes
         );
     }
 
