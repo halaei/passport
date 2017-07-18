@@ -14,6 +14,7 @@ class AuthorizationControllerTest extends TestCase
         Laravel\Passport\Passport::tokensCan([
             'scope-1' => 'description',
         ]);
+        Laravel\Passport\Passport::setPublicScopes(['scope-1']);
 
         $server = Mockery::mock(AuthorizationServer::class);
         $response = Mockery::mock(ResponseFactory::class);
@@ -30,7 +31,9 @@ class AuthorizationControllerTest extends TestCase
         $authRequest->shouldReceive('getClient->getIdentifier')->andReturn(1);
         $authRequest->shouldReceive('getScopes')->andReturn([new Laravel\Passport\Bridge\Scope('scope-1')]);
 
-        $client = new Client();
+        $client = new Client([
+            'scopes' => ['scope-1'],
+        ]);
 
         $response->shouldReceive('view')->once()->andReturnUsing(function ($view, $data) use ($authRequest, $client) {
             $this->assertEquals('passport::authorize', $view);
@@ -83,6 +86,7 @@ class AuthorizationControllerTest extends TestCase
         Laravel\Passport\Passport::tokensCan([
             'scope-1' => 'description',
         ]);
+        Laravel\Passport\Passport::setPublicScopes(['scope-1']);
 
         $server = Mockery::mock(AuthorizationServer::class);
         $response = Mockery::mock(ResponseFactory::class);
@@ -124,6 +128,7 @@ class AuthorizationControllerTest extends TestCase
         Laravel\Passport\Passport::tokensCan([
             'scope-1' => 'description',
         ]);
+        Laravel\Passport\Passport::setPublicScopes(['scope-1']);
 
         $server = Mockery::mock(AuthorizationServer::class);
         $response = Mockery::mock(ResponseFactory::class);
@@ -143,7 +148,9 @@ class AuthorizationControllerTest extends TestCase
         $authRequest->shouldReceive('setUser')->once()->andReturnNull();
         $authRequest->shouldReceive('setAuthorizationApproved')->once()->with(true);
 
-        $client = new Client();
+        $client = new Client([
+            'scopes' => ['scope-1'],
+        ]);
         $clients = Mockery::mock('Laravel\Passport\ClientRepository');
         $clients->shouldReceive('find')->with(1)->andReturn($client);
 

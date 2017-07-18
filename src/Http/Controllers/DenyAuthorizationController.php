@@ -4,6 +4,7 @@ namespace Laravel\Passport\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Http\Response;
 
 class DenyAuthorizationController
 {
@@ -36,7 +37,7 @@ class DenyAuthorizationController
     public function deny(Request $request)
     {
         $redirect = $this->getAuthRequestFromSession($request)
-                    ->getClient()->getRedirectUri();
+            ->getRedirectUri();
 
         return $this->response->redirectTo(
             $redirect.'?error=access_denied&state='.$request->input('state')
