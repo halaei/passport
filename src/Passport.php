@@ -246,7 +246,7 @@ class Passport
      */
     public static function setPublicScopes(array $scopes)
     {
-        static::$publicScopes = array_intersect($scopes, array_keys(static::$scopes));
+        static::$publicScopes = array_values(array_intersect($scopes, array_keys(static::$scopes)));
     }
 
     /**
