@@ -240,6 +240,20 @@ class Passport
     }
 
     /**
+     * Get the key-value array of public scopes
+     *
+     * @return array
+     */
+    public static function getPublicScopes()
+    {
+        $publicKeys = array_flip(static::$publicScopes);
+
+        return array_filter(static::$scopes, function ($key) use ($publicKeys) {
+            return array_key_exists($key, $publicKeys);
+        }, ARRAY_FILTER_USE_KEY);
+    }
+
+    /**
      * Declare the public scopes for the users.
      *
      * @param array $scopes
